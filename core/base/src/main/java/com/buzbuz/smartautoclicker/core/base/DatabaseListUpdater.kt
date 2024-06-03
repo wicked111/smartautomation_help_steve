@@ -18,6 +18,7 @@ package com.buzbuz.smartautoclicker.core.base
 
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
 
+
 /**
  * Helper class to update a list in the database.
  *

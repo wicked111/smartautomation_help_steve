@@ -249,4 +249,7 @@
     <string name="content_desc_open_event_list">Ouvrir la liste des évènements</string>
     <string name="content_desc_action_icon">L\'icone du type de l\'action.</string>
     <string name="content_desc_application_icon">L\'icone de l\'application à lancer.</string>
+    <string name="limit_text">Entrez d\'abord la limite supérieure</string>
+    <string name="Higherlimit">Limite supérieure (ms)</string>
+    <string name="Lowerlimit">Limite inférieure (ms)</string>
 </resources>

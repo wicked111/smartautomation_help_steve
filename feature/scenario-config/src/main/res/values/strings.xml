@@ -276,5 +276,7 @@
     <string name="dropdown_item_intent_extra_type_float" translatable="false">Float</string>
     <string name="dropdown_item_intent_extra_type_short" translatable="false">Short</string>
     <string name="dropdown_item_intent_extra_type_string" translatable="false">String</string>
-
+    <string name="limit_text">*Always Modify/Delete the Higher Limit first</string>
+    <string name="Higherlimit">Higher Limit(ms)</string>
+    <string name="Lowerlimit">Lower Limit(ms)</string>
 </resources>

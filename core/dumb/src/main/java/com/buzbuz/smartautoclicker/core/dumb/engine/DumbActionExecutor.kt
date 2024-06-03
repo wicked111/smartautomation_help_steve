@@ -42,6 +42,9 @@ internal class DumbActionExecutor(private val androidExecutor: AndroidExecutor) 
             is DumbAction.DumbClick -> executeDumbClick(action, randomize)
             is DumbAction.DumbSwipe -> executeDumbSwipe(action, randomize)
             is DumbAction.DumbPause -> executeDumbPause(action, randomize)
+            else -> {
+                // Nothing
+            }
         }
     }
 

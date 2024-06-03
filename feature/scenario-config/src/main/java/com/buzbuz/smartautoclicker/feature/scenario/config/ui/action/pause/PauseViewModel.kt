@@ -18,14 +18,17 @@ package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.pause
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.util.Log
 
 import androidx.lifecycle.AndroidViewModel
+import com.buzbuz.smartautoclicker.core.base.extensions.GlobalData
 
 import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 import com.buzbuz.smartautoclicker.feature.scenario.config.domain.EditionRepository
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.getEventConfigPreferences
 import com.buzbuz.smartautoclicker.feature.scenario.config.utils.putPauseDurationConfig
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
@@ -34,9 +37,16 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.mapNotNull
+import kotlin.random.Random
 
 @OptIn(FlowPreview::class)
 class PauseViewModel(application: Application) : AndroidViewModel(application) {
+
+    companion object {
+        private const val KEY_HIGHER_LIMIT = "higher_limit"
+        private const val KEY_LOWER_LIMIT = "lower_limit"
+    }
+
 
     /** Repository providing access to the edited items. */
     private val editionRepository = EditionRepository.getInstance(application)
@@ -51,6 +61,8 @@ class PauseViewModel(application: Application) : AndroidViewModel(application) {
     val isEditingAction: Flow<Boolean> = editionRepository.isEditingAction
         .distinctUntilChanged()
         .debounce(1000)
+
+    private var randomTimeJob: Job? = null
 
     /** The name of the pause. */
     val name: Flow<String?> = configuredPause
@@ -95,4 +107,31 @@ class PauseViewModel(application: Application) : AndroidViewModel(application) {
             sharedPreferences.edit().putPauseDurationConfig(pause.pauseDuration ?: 0).apply()
         }
     }
+
+    fun generateRandomTime(higherLimit: Long, lowerLimit: Long): Long? {
+        if (higherLimit < lowerLimit) {
+            return null // Return null indicating an error
+        }
+        val randomTime = Random.nextLong(lowerLimit, higherLimit + 1)
+        Log.d("Random Time", randomTime.toString())
+        return randomTime
+    }
+
+    fun saveHigherLimit(limit: Long) {
+        sharedPreferences.edit().putLong(KEY_HIGHER_LIMIT, limit).apply()
+    }
+
+    fun saveLowerLimit(limit: Long) {
+        sharedPreferences.edit().putLong(KEY_LOWER_LIMIT, limit).apply()
+    }
+
+    fun loadHigherLimit(): Long {
+        return sharedPreferences.getLong(KEY_HIGHER_LIMIT, 0L)
+    }
+
+    fun loadLowerLimit(): Long {
+        return sharedPreferences.getLong(KEY_LOWER_LIMIT, 0L)
+    }
+
+
 }

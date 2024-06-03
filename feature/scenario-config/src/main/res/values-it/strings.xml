@@ -249,4 +249,8 @@
     <string name="content_desc_action_icon">L\'icona che mostra il tipo di azione</string>
     <string name="content_desc_application_icon">L\'icona dell\'applicazione da avviare.</string>
 
+    <string name="limit_text">Immettere prima il limite superiore</string>
+    <string name="Higherlimit">Limite superiore (ms)</string>
+    <string name="Lowerlimit">Limite inferiore (ms)</string>
+
 </resources>

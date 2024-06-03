@@ -16,8 +16,10 @@
  */
 package com.buzbuz.smartautoclicker.feature.scenario.config.ui.action.pause
 
+import android.text.Editable
 import android.text.InputFilter
 import android.text.InputType
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +28,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.buzbuz.smartautoclicker.core.base.extensions.GlobalData
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
@@ -53,6 +56,8 @@ class PauseDialog(
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigActionPauseBinding
+
+
 
     override fun onCreateView(): ViewGroup {
         viewBinding = DialogConfigActionPauseBinding.inflate(LayoutInflater.from(context)).apply {
@@ -92,6 +97,91 @@ class PauseDialog(
                 }
             }
             hideSoftInputOnFocusLoss(editPauseDurationLayout.textField)
+
+
+
+            if(editHigherLimitEditText.text!!.isEmpty()) {
+                editLowerLimitEditText.isEnabled = false
+                editHigherLimitEditText.apply {
+                    addTextChangedListener(object : TextWatcher {
+                        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                        // This method is called before the text is changed.
+                        }
+
+                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                            // This method is called when the text is being changed.
+                        }
+
+                        override fun afterTextChanged(s: Editable?) {
+                            // This method is called after the text has changed.
+
+                            editLowerLimitEditText.isEnabled = true
+                            val higherLimitText = editHigherLimitEditText.text?.toString()
+                            val lowerLimitText = editLowerLimitEditText.text?.toString()
+                            Log.d("GlobalDataUpdate1", "Attempting to update higher limit: $higherLimitText, lower limit: $lowerLimitText")
+
+
+                            GlobalData.instance.higherLimitText = higherLimitText?.toLongOrNull()
+                            GlobalData.instance.lowerLimitText = lowerLimitText?.toLongOrNull()
+
+                            Log.d("GlobalDataValues1", "GlobalData higher limit: ${GlobalData.instance.higherLimitText}, lower limit: ${GlobalData.instance.lowerLimitText}")
+
+                            val randomTime = startGeneratingRandomTime(higherLimitText, lowerLimitText)
+                            viewModel.setPauseDuration(randomTime)
+                            viewModel.saveLowerLimit(lowerLimitText!!.toLongOrNull()?: 0L)
+                            viewModel.saveHigherLimit(higherLimitText!!.toLongOrNull()?: 0L)
+                        }
+                    })
+                }
+            }
+
+            // Enable editLowerLimitEditText after filling editHigherLimitEditText
+            editLowerLimitEditText.apply {
+                addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                        // This method is called before the text is changed.
+
+                    }
+
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                        // This method is called when the text is being changed.
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {
+                        try {
+                            val higherLimitText = editHigherLimitEditText.text?.toString()
+                            val lowerLimitText = s?.toString()
+                            Log.d("GlobalDataUpdate2", "Attempting to update higher limit: $higherLimitText, lower limit: $lowerLimitText")
+
+                            GlobalData.instance.higherLimitText = higherLimitText?.toLongOrNull()
+                            GlobalData.instance.lowerLimitText = lowerLimitText?.toLongOrNull()
+                            Log.d("GlobalDataValues2", "GlobalData higher limit: ${GlobalData.instance.higherLimitText}, lower limit: ${GlobalData.instance.lowerLimitText}")
+
+                            val randomTime = startGeneratingRandomTime(higherLimitText, lowerLimitText)
+                            viewModel.setPauseDuration(randomTime)
+                            viewModel.saveLowerLimit(lowerLimitText!!.toLongOrNull()?: 0L)
+                            viewModel.saveHigherLimit(higherLimitText!!.toLongOrNull()?: 0L)
+                        } catch (e: NumberFormatException) {
+                            Log.e("GlobalDataError", "Failed to convert text to Long: ${e.message}")
+                        }
+                    }
+                })
+            }
+
+            val higherLimit = viewModel.loadHigherLimit()
+            val lowerLimit = viewModel.loadLowerLimit()
+
+            // Set loaded values to EditTexts
+            if (higherLimit == 0L || lowerLimit == 0L) {
+                editHigherLimitEditText.setText("")
+                editLowerLimitEditText.setText("")
+            } else {
+                // Set loaded values to EditTexts only if they are not default
+                editHigherLimitEditText.setText(higherLimit.toString())
+                editLowerLimitEditText.setText(lowerLimit.toString())
+            }
+
+
         }
 
         return viewBinding.root
@@ -139,6 +229,13 @@ class PauseDialog(
 
     private fun updateSaveButton(isValidCondition: Boolean) {
         viewBinding.layoutTopBar.setButtonEnabledState(com.buzbuz.smartautoclicker.core.ui.bindings.DialogNavigationButton.SAVE, isValidCondition)
+    }
+
+    private fun startGeneratingRandomTime(higherLimitText: String?, lowerLimitText: String?): Long? {
+        val higherLimit = higherLimitText?.toLongOrNull() ?: 0L
+        val lowerLimit = lowerLimitText?.toLongOrNull() ?: 0L
+        val randomTime = viewModel.generateRandomTime(higherLimit, lowerLimit)
+        return randomTime
     }
 
     private fun onActionEditingStateChanged(isEditingAction: Boolean) {

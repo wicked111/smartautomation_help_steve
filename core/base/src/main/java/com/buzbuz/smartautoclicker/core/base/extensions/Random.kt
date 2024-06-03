@@ -18,12 +18,12 @@ package com.buzbuz.smartautoclicker.core.base.extensions
 
 import android.graphics.PointF
 import android.graphics.RectF
-
+import android.util.Log
 import com.buzbuz.smartautoclicker.core.base.GESTURE_DURATION_MAX_VALUE
+import com.buzbuz.smartautoclicker.core.base.extensions.GlobalData
 
 import kotlin.math.max
 import kotlin.math.min
-
 import kotlin.random.Random
 
 fun Random.nextFloat(from: Float, until: Float): Float =
@@ -37,15 +37,34 @@ fun Random.getRandomizedPosition(position: Int): Float = nextInt(
     until = position + RANDOMIZATION_POSITION_MAX_OFFSET_PX + 1,
 ).toFloat()
 
-fun Random.getRandomizedDuration(duration: Long): Long = nextLong(
-    from = max(duration - RANDOMIZATION_PAUSE_DURATION_MAX_OFFSET_MS, 1),
-    until = duration + RANDOMIZATION_PAUSE_DURATION_MAX_OFFSET_MS + 1,
-)
+
+
+fun Random.getRandomizedDuration(duration: Long): Long? {
+    val higherLimitText = GlobalData.instance.higherLimitText
+    val lowerLimitText = GlobalData.instance.lowerLimitText
+
+    Log.d("GlobalDataAccess", "Accessing higher limit: $higherLimitText, lower limit: $lowerLimitText")
+
+    return if (higherLimitText == null || lowerLimitText == null) {
+        duration
+    } else {
+        nextLong(
+            from = max(lowerLimitText, 1),
+            until = higherLimitText + 1
+        )
+    }
+
+}
+
+
 
 fun Random.getRandomizedGestureDuration(duration: Long): Long = nextLong(
     from = max(duration - RANDOMIZATION_DURATION_MAX_OFFSET_MS, 1),
     until = min(duration + RANDOMIZATION_DURATION_MAX_OFFSET_MS + 1, GESTURE_DURATION_MAX_VALUE),
 )
+
+
+
 
 /** */
 private const val RANDOMIZATION_POSITION_MAX_OFFSET_PX = 5

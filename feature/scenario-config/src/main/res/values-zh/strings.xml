@@ -243,4 +243,9 @@
     <string name="content_desc_open_event_list">打开脚本列表</string>
     <string name="content_desc_action_icon">这个图标标注动作类型</string>
     <string name="content_desc_application_icon">应用图标</string>
+
+    <string name="limit_text">首先输入上限</string>
+    <string name="Higherlimit">上限</string>
+    <string name="Lowerlimit">下限</string>
+
 </resources>

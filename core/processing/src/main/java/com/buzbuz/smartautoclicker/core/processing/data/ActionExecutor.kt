@@ -16,12 +16,14 @@
  */
 package com.buzbuz.smartautoclicker.core.processing.data
 
+
 import android.accessibilityservice.GestureDescription
 import android.content.Intent
 import android.graphics.Path
 import android.util.Log
 
 import com.buzbuz.smartautoclicker.core.base.AndroidExecutor
+//import com.buzbuz.smartautoclicker.core.base.extensions.getGlobalDataExample
 import com.buzbuz.smartautoclicker.core.base.extensions.getRandomizedDuration
 import com.buzbuz.smartautoclicker.core.base.extensions.getRandomizedGestureDuration
 import com.buzbuz.smartautoclicker.core.base.extensions.lineTo
@@ -155,6 +157,8 @@ internal class ActionExecutor(
         val androidIntent = Intent().apply {
             action = intent.intentAction!!
             flags = intent.flags!!
+
+
 
             intent.componentName?.let {
                 component = intent.componentName
