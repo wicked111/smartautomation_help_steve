@@ -59,17 +59,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/edit_name_layout" />
 
-           <!-- <include
-                android:id="@+id/time_unit_field"
-                layout="@layout/include_input_field_dropdown"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_horizontal_large"
-                android:layout_marginBottom="@dimen/margin_vertical_large"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/edit_pause_duration_layout"
-                app:layout_constraintTop_toTopOf="@id/edit_pause_duration_layout"
-                app:layout_constraintWidth_percent="0.3" />-->
+            <!-- <include
+                 android:id="@+id/time_unit_field"
+                 layout="@layout/include_input_field_dropdown"
+                 android:layout_width="0dp"
+                 android:layout_height="wrap_content"
+                 android:layout_marginStart="@dimen/margin_horizontal_large"
+                 android:layout_marginBottom="@dimen/margin_vertical_large"
+                 app:layout_constraintEnd_toEndOf="parent"
+                 app:layout_constraintStart_toEndOf="@id/edit_pause_duration_layout"
+                 app:layout_constraintTop_toTopOf="@id/edit_pause_duration_layout"
+                 app:layout_constraintWidth_percent="0.3" />-->
 
             <LinearLayout
                 android:id="@+id/linear"
@@ -157,13 +157,13 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/edit_lower_limit"
-                android:layout_width="0dp"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center_vertical"
                 android:paddingBottom="10dp"
                 android:layout_marginVertical="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/Specific_Key"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/edit_higher_limit">
 
@@ -181,20 +181,45 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-
-
-          <!--  <include
-                android:id="@+id/time_unit_field_randomised"
-                layout="@layout/include_input_field_dropdown"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/Specific_Key"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginStart="@dimen/margin_horizontal_large"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:layout_marginLeft="5dp"
                 android:layout_marginVertical="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/edit_lower_limit"
-                app:layout_constraintVertical_bias="0.0"
-                app:layout_constraintWidth_percent="0.3" />-->
+                app:layout_constraintTop_toBottomOf="@id/edit_higher_limit">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/specific_Key_EditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:outlineProvider="none"
+                    android:layout_gravity="center_vertical"
+                    android:drawablePadding="8dp"
+                    android:gravity="center_vertical"
+                    android:hint="@string/specific_key" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            <!--  <include
+                  android:id="@+id/time_unit_field_randomised"
+                  layout="@layout/include_input_field_dropdown"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  app:layout_constraintBottom_toBottomOf="parent"
+                  android:layout_marginStart="@dimen/margin_horizontal_large"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  android:layout_marginVertical="10dp"
+                  app:layout_constraintStart_toEndOf="@id/edit_lower_limit"
+                  app:layout_constraintVertical_bias="0.0"
+                  app:layout_constraintWidth_percent="0.3" />-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

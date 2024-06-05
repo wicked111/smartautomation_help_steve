@@ -24,11 +24,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.buzbuz.smartautoclicker.core.base.extensions.GlobalData
+import com.buzbuz.smartautoclicker.core.domain.model.action.Action
 
 import com.buzbuz.smartautoclicker.core.ui.bindings.setButtonEnabledState
 import com.buzbuz.smartautoclicker.core.ui.bindings.setError
@@ -56,7 +58,6 @@ class PauseDialog(
 
     /** ViewBinding containing the views for this dialog. */
     private lateinit var viewBinding: DialogConfigActionPauseBinding
-
 
 
     override fun onCreateView(): ViewGroup {
@@ -116,20 +117,22 @@ class PauseDialog(
                             // This method is called after the text has changed.
 
                             editLowerLimitEditText.isEnabled = true
-                            val higherLimitText = editHigherLimitEditText.text?.toString()
+                           /* val higherLimitText = editHigherLimitEditText.text?.toString()
                             val lowerLimitText = editLowerLimitEditText.text?.toString()
                             Log.d("GlobalDataUpdate1", "Attempting to update higher limit: $higherLimitText, lower limit: $lowerLimitText")
 
+                            GlobalData.instance.setValues(higherLimitText?.toLongOrNull(),lowerLimitText?.toLongOrNull())
 
-                            GlobalData.instance.higherLimitText = higherLimitText?.toLongOrNull()
-                            GlobalData.instance.lowerLimitText = lowerLimitText?.toLongOrNull()
 
-                            Log.d("GlobalDataValues1", "GlobalData higher limit: ${GlobalData.instance.higherLimitText}, lower limit: ${GlobalData.instance.lowerLimitText}")
+                          //  GlobalData.instance.higherLimitText = higherLimitText?.toLongOrNull()
+                           // GlobalData.instance.lowerLimitText = lowerLimitText?.toLongOrNull()
+
+                          //  Log.d("GlobalDataValues1", "GlobalData higher limit: ${GlobalData.instance.higherLimitText}, lower limit: ${GlobalData.instance.lowerLimitText}")
 
                             val randomTime = startGeneratingRandomTime(higherLimitText, lowerLimitText)
                             viewModel.setPauseDuration(randomTime)
                             viewModel.saveLowerLimit(lowerLimitText!!.toLongOrNull()?: 0L)
-                            viewModel.saveHigherLimit(higherLimitText!!.toLongOrNull()?: 0L)
+                            viewModel.saveHigherLimit(higherLimitText!!.toLongOrNull()?: 0L)*/
                         }
                     })
                 }
@@ -140,6 +143,7 @@ class PauseDialog(
                 addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                         // This method is called before the text is changed.
+                       // specificKeyEditText.isEnabled = false
 
                     }
 
@@ -149,18 +153,22 @@ class PauseDialog(
 
                     override fun afterTextChanged(s: Editable?) {
                         try {
-                            val higherLimitText = editHigherLimitEditText.text?.toString()
-                            val lowerLimitText = s?.toString()
-                            Log.d("GlobalDataUpdate2", "Attempting to update higher limit: $higherLimitText, lower limit: $lowerLimitText")
 
-                            GlobalData.instance.higherLimitText = higherLimitText?.toLongOrNull()
-                            GlobalData.instance.lowerLimitText = lowerLimitText?.toLongOrNull()
-                            Log.d("GlobalDataValues2", "GlobalData higher limit: ${GlobalData.instance.higherLimitText}, lower limit: ${GlobalData.instance.lowerLimitText}")
+                            specificKeyEditText.isEnabled = true
+                          /*  val higherLimitText = editHigherLimitEditText.text?.toString()
+                            val lowerLimitText = editLowerLimitEditText.text?.toString()
+
+                            GlobalData.instance.setValues(pauseActionKey,higherLimitText?.toLongOrNull(),lowerLimitText?.toLongOrNull())
+
+
+                            //GlobalData.instance.higherLimitText = higherLimitText?.toLongOrNull()
+                            //GlobalData.instance.lowerLimitText = lowerLimitText?.toLongOrNull()
+                            //Log.d("GlobalDataValues2", "GlobalData higher limit: ${GlobalData.instance.higherLimitText}, lower limit: ${GlobalData.instance.lowerLimitText}")
 
                             val randomTime = startGeneratingRandomTime(higherLimitText, lowerLimitText)
                             viewModel.setPauseDuration(randomTime)
                             viewModel.saveLowerLimit(lowerLimitText!!.toLongOrNull()?: 0L)
-                            viewModel.saveHigherLimit(higherLimitText!!.toLongOrNull()?: 0L)
+                            viewModel.saveHigherLimit(higherLimitText!!.toLongOrNull()?: 0L)*/
                         } catch (e: NumberFormatException) {
                             Log.e("GlobalDataError", "Failed to convert text to Long: ${e.message}")
                         }
@@ -168,7 +176,25 @@ class PauseDialog(
                 })
             }
 
-            val higherLimit = viewModel.loadHigherLimit()
+
+
+            specificKeyEditText.apply {
+                doAfterTextChanged {
+                    val higherLimitText = editHigherLimitEditText.text?.toString()!!
+                    val lowerLimitText = editLowerLimitEditText.text?.toString()!!
+                    val key = specificKeyEditText.text.toString()
+                    GlobalData.instance.setValues(key,higherLimitText.toLongOrNull(), lowerLimitText.toLongOrNull())
+                    val randomTime = startGeneratingRandomTime(higherLimitText, lowerLimitText)   // I want to eliminate this in future as it set the value in upper column
+                    viewModel.setPauseDuration(randomTime)
+                   // viewModel.saveLowerLimit(lowerLimitText!!.toLongOrNull()?: 0L)
+                  //  viewModel.saveHigherLimit(higherLimitText!!.toLongOrNull()?: 0L)
+                    GlobalData.instance.logAllValues()
+
+
+                }
+            }
+
+           /* val higherLimit = viewModel.loadHigherLimit()
             val lowerLimit = viewModel.loadLowerLimit()
 
             // Set loaded values to EditTexts
@@ -179,7 +205,7 @@ class PauseDialog(
                 // Set loaded values to EditTexts only if they are not default
                 editHigherLimitEditText.setText(higherLimit.toString())
                 editLowerLimitEditText.setText(lowerLimit.toString())
-            }
+            }*/
 
 
         }
@@ -245,5 +271,7 @@ class PauseDialog(
         }
     }
 }
+
+
 
 private const val TAG = "PauseDialog"

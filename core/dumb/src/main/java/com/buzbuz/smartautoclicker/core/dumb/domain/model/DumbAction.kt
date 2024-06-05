@@ -64,7 +64,7 @@ sealed class DumbAction {
         override val id: Identifier,
         override val scenarioId: Identifier,
         override val name: String,
-        val pauseDurationMs: Long,
+        val pauseDurationMs: Long
     ) : DumbAction() {
 
         override fun isValid(): Boolean = name.isNotEmpty()

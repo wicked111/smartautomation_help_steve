@@ -112,6 +112,7 @@ data class ActionEntity(
 
     // ActionType.PAUSE
     @ColumnInfo(name = "pauseDuration") val pauseDuration: Long? = null,
+   // @ColumnInfo(name = "key") val key: String? = null,
 
     // ActionType.INTENT
     @ColumnInfo(name = "isAdvanced") val isAdvanced: Boolean? = null,

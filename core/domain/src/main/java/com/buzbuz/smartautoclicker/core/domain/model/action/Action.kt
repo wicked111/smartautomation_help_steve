@@ -21,6 +21,7 @@ import com.buzbuz.smartautoclicker.core.database.entity.ClickPositionType
 
 import com.buzbuz.smartautoclicker.core.database.entity.ToggleEventType
 import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import java.util.UUID
 
 /** Base for for all possible actions for an Event. */
 sealed class Action {
@@ -127,13 +128,14 @@ sealed class Action {
         override val id: Identifier,
         override val eventId: Identifier,
         override val name: String? = null,
-        val pauseDuration: Long? = null,
+        val pauseDuration: Long? = null
     ) : Action() {
 
         override fun isComplete(): Boolean = super.isComplete() && pauseDuration != null
 
         override fun deepCopy(): Pause = copy(name = "" + name)
     }
+
 
     /**
      * Intent action.

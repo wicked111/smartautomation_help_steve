@@ -42,10 +42,10 @@ import kotlin.random.Random
 @OptIn(FlowPreview::class)
 class PauseViewModel(application: Application) : AndroidViewModel(application) {
 
-    companion object {
+   /* companion object {
         private const val KEY_HIGHER_LIMIT = "higher_limit"
         private const val KEY_LOWER_LIMIT = "lower_limit"
-    }
+    }*/
 
 
     /** Repository providing access to the edited items. */
@@ -117,7 +117,7 @@ class PauseViewModel(application: Application) : AndroidViewModel(application) {
         return randomTime
     }
 
-    fun saveHigherLimit(limit: Long) {
+  /*  fun saveHigherLimit(limit: Long) {
         sharedPreferences.edit().putLong(KEY_HIGHER_LIMIT, limit).apply()
     }
 
@@ -131,7 +131,7 @@ class PauseViewModel(application: Application) : AndroidViewModel(application) {
 
     fun loadLowerLimit(): Long {
         return sharedPreferences.getLong(KEY_LOWER_LIMIT, 0L)
-    }
+    }*/
 
 
 }

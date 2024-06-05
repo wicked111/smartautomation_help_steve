@@ -89,7 +89,7 @@ internal class DumbActionExecutor(private val androidExecutor: AndroidExecutor) 
     private suspend fun executeDumbPause(dumbPause: DumbAction.DumbPause, randomize: Boolean) {
         delay(
             getRandomizedParameter(randomize)
-                ?.getRandomizedDuration(dumbPause.pauseDurationMs)
+                ?.getRandomizedDuration(dumbPause.pauseDurationMs, dumbPause.name)
                 ?: dumbPause.pauseDurationMs
         )
     }

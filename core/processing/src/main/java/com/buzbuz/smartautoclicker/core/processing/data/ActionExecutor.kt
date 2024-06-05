@@ -63,7 +63,7 @@ internal class ActionExecutor(
      * @param actions the actions to be executed.
      * @param processingResults contains the detection results for actions that needs context.
      */
-    suspend fun executeActions(event: Event, actions: List<Action>, processingResults: ProcessingResults) {
+    suspend fun executeActions(event: Event, actions: List<Action>, processingResults: ProcessingResults ) {
         actions.forEach { action ->
             when (action) {
                 is Click -> executeClick(event, action, processingResults)
@@ -146,7 +146,7 @@ internal class ActionExecutor(
      * @param pause the pause to be executed.
      */
     private suspend fun executePause(pause: Pause) {
-        delay(random?.getRandomizedDuration(pause.pauseDuration!!) ?: pause.pauseDuration!!)
+        delay(random?.getRandomizedDuration(pause.pauseDuration!!, pause.name) ?: pause.pauseDuration!!)
     }
 
     /**

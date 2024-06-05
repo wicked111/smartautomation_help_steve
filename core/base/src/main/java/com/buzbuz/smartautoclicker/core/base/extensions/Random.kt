@@ -21,9 +21,15 @@ import android.graphics.RectF
 import android.util.Log
 import com.buzbuz.smartautoclicker.core.base.GESTURE_DURATION_MAX_VALUE
 import com.buzbuz.smartautoclicker.core.base.extensions.GlobalData
+import com.buzbuz.smartautoclicker.core.base.identifier.Identifier
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.ln
 
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.roundToLong
+import kotlin.math.sqrt
 import kotlin.random.Random
 
 fun Random.nextFloat(from: Float, until: Float): Float =
@@ -39,21 +45,31 @@ fun Random.getRandomizedPosition(position: Int): Float = nextInt(
 
 
 
-fun Random.getRandomizedDuration(duration: Long): Long? {
-    val higherLimitText = GlobalData.instance.higherLimitText
-    val lowerLimitText = GlobalData.instance.lowerLimitText
+fun Random.nextGaussian(): Double {
+    // Box-Muller transform
+    val u = nextDouble()
+    val v = nextDouble()
+    return sqrt(-2.0 * ln(u)) * cos(2.0 * PI * v)
+}
 
-    Log.d("GlobalDataAccess", "Accessing higher limit: $higherLimitText, lower limit: $lowerLimitText")
+fun Random.getRandomizedDuration(duration: Long, key: String?): Long {
+    val limitPair = GlobalData.instance.getValues(key)
 
-    return if (higherLimitText == null || lowerLimitText == null) {
+    Log.d("GlobalDataAccess", "Accessing values for key: $key, higher limit: ${limitPair?.first}, lower limit: ${limitPair?.second}")
+
+    return if (limitPair?.first == null || limitPair.second == null) {
         duration
     } else {
-        nextLong(
-            from = max(lowerLimitText, 1),
-            until = higherLimitText + 1
-        )
-    }
+        val lowerLimit = max(limitPair.second!!.toLong(), 1)
+        val upperLimit = limitPair.first!!.toLong() + 1
 
+        // Generating a more random value using normal distribution
+        val mean = (lowerLimit + upperLimit) / 2.0
+        val stdDev = (upperLimit - lowerLimit) / 6.0 // 99.7% values within lower and upper limit
+
+        val randomValue = nextGaussian() * stdDev + mean
+        randomValue.roundToLong().coerceIn(lowerLimit, upperLimit)
+    }
 }
 
 
